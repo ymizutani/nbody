@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['vector',['Vector',['../classVector.html#ad61d0f649083a7cdb2c4ed75ba6b4277',1,'Vector.Vector(double x0, double y0, double z0)'],['../classVector.html#a291a1f20276c1259eac64102e0bc3e81',1,'Vector.Vector()'],['../classVector.html#acae5041a9ca319ac60e312c72508bee6',1,'Vector.Vector(Vector v)']]]
+  ['setup',['setup',['../nbody_8pde.html#a4fc01d736fe50cf5b977f755b675f11d',1,'nbody.pde']]],
+  ['sub',['sub',['../classVector.html#ad5a5af755a644b39680220af82f3200c',1,'Vector.sub(double x1, double y1)'],['../classVector.html#a7711edb2eb694fd669447a192e634c74',1,'Vector.sub(Vector v)']]],
+  ['subd',['subD',['../classVector.html#a4db1913ed5de17cef2ec2f2f58f432ed',1,'Vector.subD(double x1, double y1)'],['../classVector.html#afb9cb177fa027b6039c5c696dfd45a9a',1,'Vector.subD(Vector v)']]]
 ];

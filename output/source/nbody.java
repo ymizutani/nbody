@@ -14,6 +14,8 @@ import java.io.IOException;
 
 public class nbody extends PApplet {
 
+NamedBody b1 = new NamedBody("hoge");
+NamedBody b2 = new NamedBody(100, 100, 0, 0, 0, 0, 0, "foo");
 
 //! \u521d\u671f\u5316\u95a2\u6570
 public void setup(){
@@ -22,7 +24,10 @@ public void setup(){
 
 //! \u63cf\u753b\u95a2\u6570
 public void draw(){
-    
+    println(b1.toString());
+    println(b2.toString());
+    b1.draw();
+    b2.draw();
 }
 
 /**
@@ -35,13 +40,29 @@ abstract class Body {
     double m;   //!< \u8cea\u91cf[kg]
 
     //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
-    Body(){
-        pos = new Vector();
-        m = 0.0f;
-        v = new Vector();
-        a = new Vector();
+    Body(Vector pos, Vector v, Vector a, double m){
+        this.pos = pos;
+        this.v = v;
+        this.a = a;
+        this.m = m;
     }
 
+    //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
+    Body(double px, double py, double vx, double vy, double ax, double ay, double m){
+        this(new Vector(px, py),
+                new Vector(vx, vy),
+                new Vector(ax, ay),
+                m);
+    }
+
+    //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
+    Body(){
+        this(0, 0, 0, 0, 0, 0, 0);
+    }
+
+    public String toString(){
+        return "pos:" + pos.toString() + ", v:" + v.toString() + ", a:" + a.toString() + ", m:" + m;
+    }
 
     //! \u7269\u4f53\u3092\u63cf\u753b\u3059\u308b\u30e1\u30bd\u30c3\u30c9\uff0e
     public abstract void draw();
@@ -56,6 +77,18 @@ class NamedBody extends Body {
     String name;
 
     //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
+    NamedBody(Vector pos, Vector v, Vector a, double m, String n){
+        super(pos, v, a, m);
+        name = n;
+    }
+
+    //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
+    NamedBody(double px, double py, double vx, double vy, double ax, double ay, double m, String n){
+        super(px, py, vx, vy, ax, ay, m);
+        name = n;
+    }
+
+    //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
     NamedBody(String n){
         super();
         name = n;
@@ -63,10 +96,10 @@ class NamedBody extends Body {
 
     public void draw(){
         println("NamedBody.draw()");
+        ellipse((float)pos.x, (float)pos.y, 10, 10);
     }
 
 }
-
 
 /**
 * 2\u6b21\u5143\u30d9\u30af\u30c8\u30eb\u3092\u8868\u3059\u30af\u30e9\u30b9
@@ -77,8 +110,8 @@ class Vector {
 
     //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
     public Vector(double x0, double y0){
-        x = 0;
-        y = 0;
+        x = x0;
+        y = y0;
     }
 
     //! \u30b3\u30f3\u30b9\u30c8\u30e9\u30af\u30bf
@@ -119,14 +152,13 @@ class Vector {
 
     //! \u6e1b\u7b97\uff08\u526f\u4f5c\u7528\u306a\u3057\uff09
     public Vector sub(Vector v){
-        return sub(v.x, v.y, v.z);
+        return sub(v.x, v.y);
     }
 
     //! \u6e1b\u7b97\uff08\u526f\u4f5c\u7528\u3042\u308a\uff09
     public void subD(double x1, double y1){
         this.x -= x1;
         this.y -= y1;
-        this.z -= z1;
     }
 
     //! \u6e1b\u7b97\uff08\u526f\u4f5c\u7528\u3042\u308a\uff09
@@ -138,7 +170,7 @@ class Vector {
 
     // \u8868\u793a
     public String toString(){
-        return "(" + this.x + ", " + this.y + ", " + this.z + ")";
+        return "(" + this.x + ", " + this.y + ")";
     }
 
 }
