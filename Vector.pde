@@ -17,10 +17,11 @@ class Vector {
         this(0, 0);
     }
 
-    //! コンストラクタ
+    //! コピーコンストラクタ
     public Vector(Vector v){
         this(v.x, v.y);
     }
+
 
     //! 加算（副作用あり）
     public Vector add(double x1, double y1){
