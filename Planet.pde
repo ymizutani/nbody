@@ -18,8 +18,8 @@ class Planet extends Body {
     }
 
     void draw(View view){
-        println("Planet.draw()");
-        ellipse((float)pos.x, (float)pos.y, 10, 10);
+        println("Planet.draw(): " + name + ", " + width + ", " + height);
+        //ellipse((float)pos.x, (float)pos.y, 10, 10);
     }
 
 }

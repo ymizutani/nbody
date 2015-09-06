@@ -32,6 +32,8 @@ void draw(){
     rect(0, 0, width, height);
     fill(255, 255, 255);
 
+    nbody.draw();
+
 
     if (frameCount > 300){
         noLoop();
