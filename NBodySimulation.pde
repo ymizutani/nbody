@@ -1,13 +1,13 @@
-/**
+/*
 * N体問題シミュレーションを表すクラス．
 */
-class NBody {
+class NBodySimulation {
     private ArrayList<Body> body;   //!< シミュレーションで扱う物体の集合．
     private View view = null;       //!< 宇宙空間の表示範囲．
     private int dt;                 //!< シミュレーション内の時間間隔．単位は秒．
 
     //! コンストラクタ
-    NBody(int winwid, int winhei){
+    NBodySimulation(int winwid, int winhei){
         body = new ArrayList<Body>();
         //setView(new View(new Vector(0, 0), 2.0820893E+11*3, 1.0820893E+11*3, winwid, winhei));
         setView(new View(new Vector(0, 0), 8.0820893E+11*2.5, 8.0820893E+11*2.5, winwid, winhei));
