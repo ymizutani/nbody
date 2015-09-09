@@ -54,12 +54,12 @@ class View {
         
 
     //! 宇宙空間のx座標を描画領域のx座標に変換する．
-    float convert_to_WindowX(double x){
+    float convertToWindowX(double x){
         return (float)((x - (origin.x - w/2)) / w * window_width);
     }
 
     //! 宇宙空間のy座標を描画領域のx座標に変換する．
-    float  convert_to_WindowY(double y){
+    float convertToWindowY(double y){
         return (float)((y - (origin.y - h/2)) / h * window_height);
     }
 

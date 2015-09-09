@@ -65,6 +65,19 @@ class Vector {
         subD(v.x, v.y);
     }
 
+    //! 距離を求める
+    public double distance(Vector v){
+        double dx = this.x - v.x;
+        double dy = this.y - v.y;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
+
+    //! ベクトル値を設定する
+    public void set(double x, double y){
+        this.x = x;
+        this.y = y;
+    }
+
 
 
     // 表示

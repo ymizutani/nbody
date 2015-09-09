@@ -6,11 +6,12 @@ NBody nbody;
 //! 初期化関数
 void setup(){
     // 描画領域の表示
-    size(400, 400); 
+    size(600, 600); 
     background(0, 0, 0);
 
     // N体問題の設定
     nbody = new NBody(width, height);
+    nbody.setDt(300);
 
     //主要な星           <--------------位置[m]------------------>   <----------速度[m/s]------------->   <-質量[kg]->
     nbody.add(new Planet(new Vector(0            ,               0), new Vector(0         ,           0), 1.99E+30,    "Sun"));
@@ -27,15 +28,21 @@ void setup(){
 
 //! 描画関数
 void draw(){
+    // 描画領域全体を黒で塗り潰す
     noStroke();
-    fill(0, 0, 0);
+    fill(0, 0, 0, 64);
     rect(0, 0, width, height);
-    fill(255, 255, 255);
 
+    // 物体の描画 
+    fill(255, 255, 255, 255);
+    nbody.simulate(512);
     nbody.draw();
 
-
-    if (frameCount > 300){
-        noLoop();
+    if (frameCount % 60 == 0){
+        println("frameRate = " + frameRate);
     }
+
+    //if (frameCount > 300){
+    //    noLoop();
+    //}
 }
