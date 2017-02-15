@@ -4,21 +4,20 @@
 
 
 build:
-	processing-java --build --sketch=../nbody --output=output --force
+	processing-java --sketch=../nbody --output=output --force --build 
 
 wait:
 	@while :; do \
         inotifywait *.pde 1>/dev/null 2>&1;\
         echo "==== `date` ====";\
-        processing-java --build --sketch=../nbody --output=output --force;\
+        processing-java --sketch=../nbody --output=output --force --build;\
     done
 
 run:
-	processing-java --run --sketch=../nbody --output=output --force
+	processing-java --sketch=../nbody --output=output --force --run
 
 doc:
 	doxygen
 
 clean:
 	rm -fr output
-
