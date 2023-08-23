@@ -51,6 +51,9 @@ class NBodySimulation {
             body.get(i).move(dt);
         }
 
+        // 星0を描画領域の中心にする
+        this.view.setOrigin(body.get(0).pos);
+
     }
 
     //! N回dt分だけ物体運動をシミュレートする．
