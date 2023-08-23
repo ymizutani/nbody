@@ -9,8 +9,17 @@ class NBodySimulation {
     //! コンストラクタ
     NBodySimulation(int winwid, int winhei){
         body = new ArrayList<Body>();
-        //setView(new View(new Vector(0, 0), 2.0820893E+11*3, 1.0820893E+11*3, winwid, winhei));
-        setView(new View(new Vector(0, 0), 8.0820893E+11*2.5, 8.0820893E+11*2.5, winwid, winhei));
+
+        // //狭範囲
+        // setView(new View(new Vector(0, 0), 2.0820893E+11*3, 2.0820893E+11*3, winwid, winhei));
+
+        //中範囲
+        setView(new View(new Vector(0, 0), 3.0820893E+11*3, 3.0820893E+11*3, winwid, winhei));
+
+
+        ////広範囲
+        //setView(new View(new Vector(0, 0), 8.0820893E+11*2.5, 8.0820893E+11*2.5, winwid, winhei));
+
         setDt(600);
     }
 
