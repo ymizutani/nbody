@@ -20,7 +20,7 @@ class Planet extends Body {
     void draw(View view){
         //println("Planet.draw(): " + name + ", " + width + ", " + height);
         ellipse(view.convertToWindowX(pos.x),
-                view.convertToWindowY(pos.y), 10, 10);
+                view.convertToWindowY(pos.y), 5, 5);
         text(this.name, view.convertToWindowX(pos.x), view.convertToWindowY(pos.y));
     }
 
