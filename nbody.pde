@@ -1,6 +1,52 @@
-
+import parallel.*;
 
 NBodySimulation simulator;
+
+int P = 1;
+/////////////////////
+int BATCH_SIZE = 8;
+int ANUM = 700;
+int DT = 3600;
+
+class ParallelSimurataionCall extends ParallelTask {
+    int bodynum;
+
+    ParallelSimurataionCall(int bn){
+        bodynum = bn;
+    }
+
+    void run(){
+        int myrank = getMyrank();
+
+        if (P==1){
+            if (myrank == 0){
+                simulator.simulate(0, bodynum-1);
+            }
+        }else if (P==2){
+            if (myrank == 0){
+                simulator.simulate(0, bodynum/2 - 1);
+            }else if (myrank == 1){
+                simulator.simulate(bodynum/2, bodynum-1);
+            }
+        }else if (P==4){
+            if (myrank == 0){      simulator.simulate(0,            bodynum/4 - 1);  }
+            else if (myrank == 1){ simulator.simulate(bodynum/4,    bodynum/2 -1 );  }
+            else if (myrank == 2){ simulator.simulate(bodynum/2,    bodynum*3/4 -1); }
+            else if (myrank == 3){ simulator.simulate(bodynum*3/4, bodynum-1);       }
+
+        }else if (P==8){
+            if (myrank == 0){       simulator.simulate(0,           bodynum*1/8 - 1); }
+            else if (myrank == 1){  simulator.simulate(bodynum*1/8, bodynum*2/8 - 1); }
+            else if (myrank == 2){  simulator.simulate(bodynum*2/8, bodynum*3/8 - 1); }
+            else if (myrank == 3){  simulator.simulate(bodynum*3/8, bodynum*4/8 - 1); }
+            else if (myrank == 4){  simulator.simulate(bodynum*4/8, bodynum*5/8 - 1); }
+            else if (myrank == 5){  simulator.simulate(bodynum*5/8, bodynum*6/8 - 1); }
+            else if (myrank == 6){  simulator.simulate(bodynum*6/8, bodynum*7/8 - 1); }
+            else if (myrank == 7){  simulator.simulate(bodynum*7/8, bodynum*8/8 - 1); }
+        }
+    }
+}
+
 
 //! 初期化関数
 void setup(){
@@ -10,8 +56,13 @@ void setup(){
 
     // N体問題の設定
     simulator = new NBodySimulation(width, height);
-    simulator.setDt(300);
+    simulator.setDt(DT);
     addBodies(simulator);
+
+    // 並列処理の初期化
+    if (P>=1){
+        Parallel.init(new ParallelSimurataionCall(simulator.body.size()), P, this);
+    }
 
 }
 
@@ -19,19 +70,30 @@ void setup(){
 void draw(){
     // 描画領域全体を黒で塗り潰す
     noStroke();
-    fill(0, 0, 0, 64);
+    fill(0, 0, 0, 255);
     rect(0, 0, width, height);
 
     // 物体情報の更新
-    simulator.simulate(256);
+    if (P >= 1){
+        for (int i=0; i<BATCH_SIZE; i++){
+            Parallel.fexec();
+        }
+    }else{
+        for (int i=0; i<BATCH_SIZE; i++){
+            simulator.simulate();
+        }
+    }
 
     // 物体の描画 
     fill(255, 255, 255, 255);
     simulator.draw();
 
-    if (frameCount % 60 == 0){
+
+    // フレームレートを表示する
+    if (frameCount % 30 == 0){
         println("frameRate = " + frameRate);
     }
+    text("frameRate: " + (int)(frameRate*100)/(double)100, 20, 20);
 
     //if (frameCount > 300){
     //    noLoop();
@@ -59,7 +121,7 @@ void addBodies(NBodySimulation s){
     s.add(new Planet(new Vector(1.4267254E+12,               0), new Vector(0,           -9.6724E+3), 5.688E+26,   "Saturn"));
 
 
-    for (int i=0; i<300; i++){
+    for (int i=0; i<ANUM; i++){
         s.add(new Planet(new Vector(myrand(0.5,1.5)*2.0E+11,  myrand(0.5,1.5)*2.0E+11), 
                          new Vector(myrand(-1,1)*4.0E+4, myrand(-1,1)*4.0E+4 ), 
                          5.688E+25, 

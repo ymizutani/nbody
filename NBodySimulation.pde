@@ -40,37 +40,56 @@ class NBodySimulation {
 
     //! 1dt分だけ物体運動をシミュレートする．
     void simulate(){
+        simulate(0, body.size()-1);
+    }
+
+    void simulate(int si, int ei){
+        //println("simulate(" + si + ", " + ei + ")");
 
         // 物体にかかる力をリセット
-        for (int i=0; i<body.size(); i++){
+        for (int i=si; i<=ei; i++){
             body.get(i).f.set(0, 0);
         }
 
         // 物体に加わる力を計算
-        for (int i=0; i<body.size(); i++){
-            for (int j=0; j<i; j++){
-                Vector f = body.get(i).calcf(body.get(j));
-                body.get(i).f.addD(f);
-                body.get(j).f.subD(f);
+        ////1 for (int i=0; i<body.size(); i++){
+        ////1     for (int j=0; j<i; j++){
+        ////1         Vector f = body.get(i).calcf(body.get(j));
+        ////1         body.get(i).f.addD(f);
+        ////1         body.get(j).f.subD(f);
+        ////1     }
+        ////1 }
+        for (int i=si; i<=ei; i++){
+            for (int j=0; j<body.size(); j++){
+                if (i != j){
+                    Vector f = body.get(i).calcf(body.get(j));
+                    body.get(i).f.addD(f);
+                }
             }
         }
 
         // 物体を移動させる
-        for (int i=0; i<body.size(); i++){
+        for (int i=si; i<=ei; i++){
             body.get(i).move(dt);
         }
 
-        // 星0を描画領域の中心にする
-        this.view.setOrigin(body.get(0).pos);
+        //// 星0を描画領域の中心にする
+        //this.view.setOrigin(body.get(0).pos);
 
     }
 
-    //! N回dt分だけ物体運動をシミュレートする．
-    void simulate(int N){
-        for (int i=0; i<N; i++){
-            simulate();
-        }
-    }
+    /// //! N回dt分だけ物体運動をシミュレートする．
+    /// void simulate(int N){
+    ///     for (int i=0; i<N; i++){
+    ///         simulate();
+    ///     }
+    /// }
+
+    /// void simulate(int N, int si, int ei){
+    ///     for (int i=0; i<N; i++){
+    ///         simulate(si, ei);
+    ///     }
+    /// }
 
 
     //! 現在の物体集合を描画する．

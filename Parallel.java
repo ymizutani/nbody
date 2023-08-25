@@ -62,9 +62,9 @@ public class Parallel extends PApplet{
 		}
 		for(Future<?> future : futures){
 		    try{
-		    	future.get();
+		        future.get();
 		    }catch(Exception e){
-		    e.printStackTrace();
+		        e.printStackTrace();
 		    }
 		}
 		futures.clear();
