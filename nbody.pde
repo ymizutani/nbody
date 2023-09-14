@@ -1,8 +1,11 @@
 import parallel.*;
-
 NBodySimulation simulator;
 
-int P = 1;
+
+// スレッド数
+int P = 8;
+
+
 /////////////////////
 int BATCH_SIZE = 8;
 int ANUM = 700;
@@ -16,34 +19,30 @@ class ParallelSimurataionCall extends ParallelTask {
     }
 
     void run(){
+        // 自分のスレッド番号(0~P-1)を取得する
         int myrank = getMyrank();
 
-        if (P==1){
-            if (myrank == 0){
-                simulator.simulate(0, bodynum-1);
-            }
-        }else if (P==2){
-            if (myrank == 0){
-                simulator.simulate(0, bodynum/2 - 1);
-            }else if (myrank == 1){
-                simulator.simulate(bodynum/2, bodynum-1);
-            }
-        }else if (P==4){
-            if (myrank == 0){      simulator.simulate(0,            bodynum/4 - 1);  }
-            else if (myrank == 1){ simulator.simulate(bodynum/4,    bodynum/2 -1 );  }
-            else if (myrank == 2){ simulator.simulate(bodynum/2,    bodynum*3/4 -1); }
-            else if (myrank == 3){ simulator.simulate(bodynum*3/4, bodynum-1);       }
-
-        }else if (P==8){
-            if (myrank == 0){       simulator.simulate(0,           bodynum*1/8 - 1); }
-            else if (myrank == 1){  simulator.simulate(bodynum*1/8, bodynum*2/8 - 1); }
-            else if (myrank == 2){  simulator.simulate(bodynum*2/8, bodynum*3/8 - 1); }
-            else if (myrank == 3){  simulator.simulate(bodynum*3/8, bodynum*4/8 - 1); }
-            else if (myrank == 4){  simulator.simulate(bodynum*4/8, bodynum*5/8 - 1); }
-            else if (myrank == 5){  simulator.simulate(bodynum*5/8, bodynum*6/8 - 1); }
-            else if (myrank == 6){  simulator.simulate(bodynum*6/8, bodynum*7/8 - 1); }
-            else if (myrank == 7){  simulator.simulate(bodynum*7/8, bodynum*8/8 - 1); }
+        // 各スレッドが担当する星の数を求める．
+        // 以下のように計算することで星数(bodynum)がスレッド数(P)で
+        // 割り切れない場合でも概ね均等に分割できる．
+        int[] num =  new int[P];
+        for (int i=0; i<P; i++){
+            num[i] = (bodynum + i) / P;  
         }
+
+        // 各スレッドが担当する星の開始番号を求める
+        int[] startNo =  new int[P];
+        startNo[0] = 0;
+        for (int i=1; i<P; i++){
+            startNo[i] = startNo[i-1] + num[i-1];
+        }
+
+        // 並列呼び出し．
+        // P個のスレッドが下記の関数を呼び出す．
+        // 各スレッドのmyrankには0からP-1のいずれかの値が設定されており，
+        // 各スレッドは自分が担当する星のみ物体運動を計算する．
+        simulator.simulate(startNo[myrank], num[myrank]);
+
     }
 }
 
@@ -122,7 +121,7 @@ void addBodies(NBodySimulation s){
 
 
     for (int i=0; i<ANUM; i++){
-        s.add(new Planet(new Vector(myrand(0.5,1.5)*2.0E+11,  myrand(0.5,1.5)*2.0E+11), 
+        s.add(new Asteroid(new Vector(myrand(0.5,1.5)*2.0E+11,  myrand(0.5,1.5)*2.0E+11), 
                          new Vector(myrand(-1,1)*4.0E+4, myrand(-1,1)*4.0E+4 ), 
                          5.688E+25, 
                          ""));

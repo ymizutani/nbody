@@ -1,18 +1,18 @@
 
 /**
-* 名前付きの物体を表す抽象クラス
+* 小惑星を表す抽象クラス
 */
-class Planet extends Body {
+class Asteroid extends Body {
     String name;
 
     //! コンストラクタ
-    Planet(Vector pos, Vector v, double m, String n){
+    Asteroid(Vector pos, Vector v, double m, String n){
         super(pos, v, m);
         name = " " + n;
     }
 
     //! コンストラクタ
-    Planet(String n){
+    Asteroid(String n){
         super();
         name = " " + n;
     }
@@ -20,7 +20,7 @@ class Planet extends Body {
     void draw(View view){
         //println("Planet.draw(): " + name + ", " + width + ", " + height);
         ellipse(view.convertToWindowX(pos.x),
-                view.convertToWindowY(pos.y), 8, 8);
+                view.convertToWindowY(pos.y), 4, 4);
         text(this.name, view.convertToWindowX(pos.x), view.convertToWindowY(pos.y));
     }
 

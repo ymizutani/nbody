@@ -38,16 +38,19 @@ class NBodySimulation {
         body.add(b);
     }
 
-    //! 1dt分だけ物体運動をシミュレートする．
+    //! 全ての星を対象に，1dt分だけ物体運動をシミュレートする．
     void simulate(){
-        simulate(0, body.size()-1);
+        simulate(0, body.size());
     }
 
-    void simulate(int si, int ei){
-        //println("simulate(" + si + ", " + ei + ")");
+    //! 星番号startNoからnum個の星を対象に，1dt分だけ物体運動をシミュレートする
+    void simulate(int startNo, int num){
+        int endNo = startNo + num - 1;
+
+        //println("simulate: " + startNo + " .. " + endNo);
 
         // 物体にかかる力をリセット
-        for (int i=si; i<=ei; i++){
+        for (int i=startNo; i<=endNo; i++){
             body.get(i).f.set(0, 0);
         }
 
@@ -59,7 +62,7 @@ class NBodySimulation {
         ////1         body.get(j).f.subD(f);
         ////1     }
         ////1 }
-        for (int i=si; i<=ei; i++){
+        for (int i=startNo; i<=endNo; i++){
             for (int j=0; j<body.size(); j++){
                 if (i != j){
                     Vector f = body.get(i).calcf(body.get(j));
@@ -69,7 +72,7 @@ class NBodySimulation {
         }
 
         // 物体を移動させる
-        for (int i=si; i<=ei; i++){
+        for (int i=startNo; i<=endNo; i++){
             body.get(i).move(dt);
         }
 
@@ -85,11 +88,6 @@ class NBodySimulation {
     ///     }
     /// }
 
-    /// void simulate(int N, int si, int ei){
-    ///     for (int i=0; i<N; i++){
-    ///         simulate(si, ei);
-    ///     }
-    /// }
 
 
     //! 現在の物体集合を描画する．

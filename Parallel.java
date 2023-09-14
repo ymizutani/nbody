@@ -1,4 +1,5 @@
 package parallel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -81,6 +82,12 @@ public class Parallel extends PApplet{
 		Parallel.exe.shutdown();
 	}
 	
+
+	//描画領域の統合　デフォルトは3(image重ね合わせ方式)
+	public static double merge() {
+        merger(3);
+    }
+
 	//描画領域の統合　num=1...blend方式 2...クロマキー方式 3...image重ね合わせ方式
 	public static double merge(int num) {
 		double start = System.nanoTime();
