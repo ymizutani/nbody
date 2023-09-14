@@ -23,7 +23,7 @@ doc:
 	doxygen
 
 clean:
-	rm -fr output *.class paralle.jar $(tmpdir)
+	rm -fr output *.class paralle.jar $(tmpdir)/ parallel/
 
 jar:
 	rm -fr $(tmpdir)
@@ -36,5 +36,9 @@ jar:
         mkdir parallel ;\
         mv Parallel.class ParallelTask.class parallel/ ;\
         $(pdir)/java/bin/jar -cf parallel.jar parallel ;\
+        $(pdir)/java/bin/jar -cf parallel.jar parallel ;\
     )
+	mkdir -p parallel/library/
+	mv $(tmpdir)/parallel.jar parallel/library/
+
 

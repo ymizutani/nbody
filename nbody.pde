@@ -3,7 +3,7 @@ NBodySimulation simulator;
 
 
 // スレッド数
-int P = 8;
+int P = 1;
 
 
 /////////////////////
@@ -58,15 +58,22 @@ void setup(){
     simulator.setDt(DT);
     addBodies(simulator);
 
-    // 並列処理の初期化
-    if (P>=1){
-        Parallel.init(new ParallelSimurataionCall(simulator.body.size()), P, this);
-    }
-
 }
+
+int count = 0;
 
 //! 描画関数
 void draw(){
+
+    // 並列処理の初期化
+    if (count++ == 0){
+        if (P>=1){
+            println("スレッド数" + P + "で実行します");
+            Parallel.init(new ParallelSimurataionCall(simulator.body.size()), P, this);
+        }
+    }
+
+
     // 描画領域全体を黒で塗り潰す
     noStroke();
     fill(0, 0, 0, 255);
@@ -84,7 +91,7 @@ void draw(){
     }
 
     // 物体の描画 
-    fill(255, 255, 255, 255);
+    fill(255, 255, 255, 255);   //塗りつぶしを白にする（星の描画のため）
     simulator.draw();
 
 
@@ -94,9 +101,17 @@ void draw(){
     }
     text("frameRate: " + (int)(frameRate*100)/(double)100, 20, 20);
 
-    //if (frameCount > 300){
-    //    noLoop();
-    //}
+
+    // 一定のタイミングでスレッド数を増やす．
+    // 最後はグラフを出力して終了する．
+    if (count > 100){
+        if(P == 8){
+          Parallel.createGraph();    //グラフ作成
+          exit();
+        }
+        P++;
+        count = 0;
+    }
 }
 
 double myrand(double a, double b){
@@ -120,6 +135,7 @@ void addBodies(NBodySimulation s){
     s.add(new Planet(new Vector(1.4267254E+12,               0), new Vector(0,           -9.6724E+3), 5.688E+26,   "Saturn"));
 
 
+    //小惑星の追加
     for (int i=0; i<ANUM; i++){
         s.add(new Asteroid(new Vector(myrand(0.5,1.5)*2.0E+11,  myrand(0.5,1.5)*2.0E+11), 
                          new Vector(myrand(-1,1)*4.0E+4, myrand(-1,1)*4.0E+4 ), 
