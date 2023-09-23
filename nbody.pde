@@ -1,4 +1,5 @@
 import parallel.*;
+
 NBodySimulation simulator;
 
 
@@ -11,14 +12,13 @@ int BATCH_SIZE = 8;
 int ANUM = 700;
 int DT = 3600;
 
-class ParallelSimurataionCall extends ParallelTask {
-    int bodynum;
+class ParallelSimurataion extends ParallelTask {
 
-    ParallelSimurataionCall(int bn){
-        bodynum = bn;
-    }
+    ParallelSimurataion(){ }
 
     void run(){
+        int bodynum = simulator.body.size();
+      
         // 自分のスレッド番号(0~P-1)を取得する
         int myrank = getMyrank();
 
@@ -29,6 +29,18 @@ class ParallelSimurataionCall extends ParallelTask {
         for (int i=0; i<P; i++){
             num[i] = (bodynum + i) / P;  
         }
+        
+        int[] num2 = new int[P];
+        int rem = bodynum % P;
+        for (int i=0; i<P; i++){
+          if (i < rem){
+            num2[i] = bodynum / P + 1;
+          }else{
+            num2[i] = bodynum / P;
+          }
+        }
+        
+
 
         // 各スレッドが担当する星の開始番号を求める
         int[] startNo =  new int[P];
@@ -66,17 +78,18 @@ int count = 0;
 void draw(){
 
     // 並列処理の初期化
+    // 実行の途中でスレッド数を変更したいので，draw内でinitする
     if (count++ == 0){
         if (P>=1){
             println("スレッド数" + P + "で実行します");
-            Parallel.init(new ParallelSimurataionCall(simulator.body.size()), P, this);
+            Parallel.init(new ParallelSimurataion(), P, this);
         }
     }
 
 
     // 描画領域全体を黒で塗り潰す
     noStroke();
-    fill(0, 0, 0, 255);
+    fill(0, 0, 0, 100);
     rect(0, 0, width, height);
 
     // 物体情報の更新
@@ -97,19 +110,19 @@ void draw(){
 
     // フレームレートを表示する
     if (frameCount % 30 == 0){
-        println("frameRate = " + frameRate);
+        println("P =" + P + ", " + "frameRate = " + frameRate);
     }
-    text("frameRate: " + (int)(frameRate*100)/(double)100, 20, 20);
+    text("P:" + P + ", " + "frameRate: " + (int)(frameRate*100)/(double)100, 20, 20);
 
 
     // 一定のタイミングでスレッド数を増やす．
     // 最後はグラフを出力して終了する．
-    if (count > 100){
-        if(P == 8){
+    if (count > 200){
+        if(P == 32){
           Parallel.createGraph();    //グラフ作成
           exit();
         }
-        P++;
+        P *= 2;
         count = 0;
     }
 }
@@ -143,5 +156,3 @@ void addBodies(NBodySimulation s){
                          ""));
     }
 }
-
-

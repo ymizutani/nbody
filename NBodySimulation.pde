@@ -16,7 +16,6 @@ class NBodySimulation {
         //中範囲
         setView(new View(new Vector(0, 0), 3.0820893E+11*3, 3.0820893E+11*3, winwid, winhei));
 
-
         ////広範囲
         //setView(new View(new Vector(0, 0), 8.0820893E+11*2.5, 8.0820893E+11*2.5, winwid, winhei));
 
@@ -38,7 +37,7 @@ class NBodySimulation {
         body.add(b);
     }
 
-    //! 全ての星を対象に，1dt分だけ物体運動をシミュレートする．
+    //! 全ての星を対象に，次の（dt秒後）の物体の状態を求める
     void simulate(){
         simulate(0, body.size());
     }
@@ -77,17 +76,9 @@ class NBodySimulation {
         }
 
         //// 星0を描画領域の中心にする
-        //this.view.setOrigin(body.get(0).pos);
+        this.view.setOrigin(body.get(0).pos);
 
     }
-
-    /// //! N回dt分だけ物体運動をシミュレートする．
-    /// void simulate(int N){
-    ///     for (int i=0; i<N; i++){
-    ///         simulate();
-    ///     }
-    /// }
-
 
 
     //! 現在の物体集合を描画する．

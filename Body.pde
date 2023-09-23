@@ -111,4 +111,3 @@ abstract class Body {
     abstract void draw(View v);
 
 }
-
